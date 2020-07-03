@@ -2,6 +2,7 @@
 # Simple wrapper around pyinstaller
 
 set -e
+set -x
 
 # Generate a random key for encryption
 random_key=$(pwgen -s 16 1)
