@@ -1,13 +1,6 @@
 #!/bin/bash
 
-REPOSITORY=${1:-six8/pyinstaller-alpine-linux-amd64}
-ARCH=${2:-''}
-PYINSTALLER_TAG=${3:-v3.5}
-ALPINE_VERSION=${4:-3.6}
-
-docker build -t ${REPOSITORY}:alpine-${ALPINE_VERSION}-pyinstaller-${PYINSTALLER_TAG} \
-	--build-arg ARCH=${ARCH} \
-	--build-arg PYINSTALLER_TAG=${PYINSTALLER_TAG} \
-	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
-	.
+#export http_proxy='http://10.144.1.10:8080/'
+#export https_proxy='https://10.144.1.10:8080/'
+docker build --network host -t alpine-pyinstaller .
 

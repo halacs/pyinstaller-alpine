@@ -1,10 +1,10 @@
-ARG ARCH=""
-ARG ALPINE_VERSION="3.6"
+#ARG ALPINE_VERSION="3.6-alpine3.11" #NEM JO
+ARG ALPINE_VERSION="3.8-alpine3.10"
 
-FROM ${ARCH}python:${ALPINE_VERSION}-alpine
+FROM python:${ALPINE_VERSION}
 
 ARG PYINSTALLER_TAG
-ENV PYINSTALLER_TAG ${PYINSTALLER_TAG:-"develop"}
+ENV PYINSTALLER_TAG "develop"
 
 # Official Python base image is needed or some applications will segfault.
 # PyInstaller needs zlib-dev, gcc, libc-dev, and musl-dev
@@ -17,8 +17,9 @@ RUN apk --update --no-cache add \
     g++ \
     git \
     pwgen \
-    openssl-dev libressl-dev musl-dev libffi-dev \
-    && pip install --upgrade pip
+    libffi-dev \
+    openssl-dev \
+    libressl-dev
 
 RUN pip install --upgrade pip
 
@@ -29,7 +30,7 @@ RUN pip install \
 # Build bootloader for alpine
 RUN git clone --branch ${PYINSTALLER_TAG} https://github.com/pyinstaller/pyinstaller.git /tmp/pyinstaller \
     && cd /tmp/pyinstaller/bootloader \
-    && CFLAGS="-Wno-stringop-overflow" python ./waf configure --no-lsb all \
+    && CFLAGS="-static-libgcc -static-libstdc++ -static -Wno-stringop-overflow -pie" python ./waf configure --no-lsb all --target-arch=64bit \
     && pip install .. \
     && rm -Rf /tmp/pyinstaller
 
